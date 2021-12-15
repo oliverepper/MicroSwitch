@@ -1,0 +1,87 @@
+syntax = "proto3";
+
+import "google/protobuf/Empty.proto";
+import "google/protobuf/timestamp.proto";
+
+/*
+ * ServerInfo Service
+ */
+service ServerInfoService {
+    rpc info(google.protobuf.Empty) returns (ServerInfo) {}
+}
+
+message ServerInfo {
+    string version = 1;
+    google.protobuf.Timestamp lastShutdown = 2;
+    google.protobuf.Timestamp startedAt = 3;
+}
+
+
+/*
+ * PushService
+ */
+service PushService {
+    rpc add(TokenRequest) returns (google.protobuf.Empty) {}
+    rpc invite(InvitationRequest) returns (stream InvitationResponse) {}
+}
+
+// mclient token --add 123 --handle oliver
+message TokenRequest {
+    string token = 1;
+    string handle = 2;
+}
+
+message Handle {
+    string value = 1;
+    repeated string tokens = 2;
+}
+
+// mclient token --invite "maike matz" --sessionid 123
+message InvitationRequest {
+    string from = 1;
+    repeated string to = 2;
+    bytes payload = 3;
+}
+
+message InvitationResponse {
+    int32 code = 1;
+    string message = 2;
+}
+
+message APNConfig {
+    string key = 1;
+    string keyIdentifier = 2;
+    string teamIdentifier = 3;
+    string topic = 4;
+}
+
+/*
+ * Signal Service
+ */
+service SignalService {
+    rpc signal(stream Signal) returns (stream Signal) {}
+}
+
+message Signal {
+    oneof type {
+        Connect connect = 1;
+        Broadcast broadcast = 2;
+        Error error = 3;
+    }
+}
+
+message Connect {
+    string from = 1;
+    string sessionId = 2;
+    bool connected = 3;
+}
+
+message Broadcast {
+    string sessionId = 1;
+    bytes payload = 2;
+}
+
+message Error {
+    int32 code = 1;
+    string message = 2;
+}
