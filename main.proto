@@ -38,8 +38,8 @@ message Handle {
 
 // mclient token --invite "maike matz" --sessionid 123
 message InvitationRequest {
-    string from = 1;
-    repeated string to = 2;
+    string from = 1; // change to synonym of "inviting person"
+    repeated string to = 2; // change to recipients, should really be plural
     bytes payload = 3;
 }
 
@@ -54,6 +54,16 @@ message APNConfig {
     string teamIdentifier = 3;
     string topic = 4;
 }
+
+
+/*
+ * AddressBook Service
+ */
+service AddressBookService {
+    rpc list(google.protobuf.Empty) returns (stream Handle) {}
+}
+
+
 
 /*
  * Signal Service

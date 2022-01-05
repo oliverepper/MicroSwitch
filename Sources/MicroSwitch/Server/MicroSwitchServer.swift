@@ -97,6 +97,7 @@ final class MicroSwitchServer {
             .withServiceProviders([
                 ServerInfoServiceImpl(),
                 PushServiceImpl(),
+                AddressBookServiceImpl(),
                 SignalServiceImpl()
             ])
             .bind(host: self.host, port: self.port)

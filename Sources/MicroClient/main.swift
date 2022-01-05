@@ -19,6 +19,7 @@ struct MicroClient: ParsableCommand {
             ServerInfo.self,
             AddToken.self,
             Invite.self,
+            List.self,
             Signal.self
         ],
         defaultSubcommand: ServerInfo.self
@@ -155,6 +156,37 @@ extension MicroClient {
                 $0.payload = data
             }) { response in
                 print(response)
+            }
+
+            request.status.whenComplete { result in
+                switch result {
+                case let .success(status):
+                    if let message = status.message {
+                        print(message)
+                    } else {
+                        print("done")
+                    }
+                case let .failure(error):
+                    print(error)
+                }
+            }
+
+            _ = try request.status.wait()
+        }
+    }
+
+    struct List: ParsableCommand {
+        static var configuration = CommandConfiguration(
+            abstract: "List all handles"
+        )
+
+        @OptionGroup var options: Options
+
+        func run() throws {
+            let client = AddressBookServiceClient(channel: options.getConnection())
+
+            let request = client.list(.init()) { handle in
+                print("Handle: \(handle.value)")
             }
 
             request.status.whenComplete { result in

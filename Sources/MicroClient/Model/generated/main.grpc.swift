@@ -188,6 +188,76 @@ internal final class PushServiceClient: PushServiceClientProtocol {
 }
 
 ///
+/// AddressBook Service
+///
+/// Usage: instantiate `AddressBookServiceClient`, then call methods of this protocol to make API calls.
+internal protocol AddressBookServiceClientProtocol: GRPCClient {
+  var serviceName: String { get }
+  var interceptors: AddressBookServiceClientInterceptorFactoryProtocol? { get }
+
+  func list(
+    _ request: Google_Protobuf_Empty,
+    callOptions: CallOptions?,
+    handler: @escaping (Handle) -> Void
+  ) -> ServerStreamingCall<Google_Protobuf_Empty, Handle>
+}
+
+extension AddressBookServiceClientProtocol {
+  internal var serviceName: String {
+    return "AddressBookService"
+  }
+
+  /// Server streaming call to list
+  ///
+  /// - Parameters:
+  ///   - request: Request to send to list.
+  ///   - callOptions: Call options.
+  ///   - handler: A closure called when each response is received from the server.
+  /// - Returns: A `ServerStreamingCall` with futures for the metadata and status.
+  internal func list(
+    _ request: Google_Protobuf_Empty,
+    callOptions: CallOptions? = nil,
+    handler: @escaping (Handle) -> Void
+  ) -> ServerStreamingCall<Google_Protobuf_Empty, Handle> {
+    return self.makeServerStreamingCall(
+      path: "/AddressBookService/list",
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makelistInterceptors() ?? [],
+      handler: handler
+    )
+  }
+}
+
+internal protocol AddressBookServiceClientInterceptorFactoryProtocol {
+
+  /// - Returns: Interceptors to use when invoking 'list'.
+  func makelistInterceptors() -> [ClientInterceptor<Google_Protobuf_Empty, Handle>]
+}
+
+internal final class AddressBookServiceClient: AddressBookServiceClientProtocol {
+  internal let channel: GRPCChannel
+  internal var defaultCallOptions: CallOptions
+  internal var interceptors: AddressBookServiceClientInterceptorFactoryProtocol?
+
+  /// Creates a client for the AddressBookService service.
+  ///
+  /// - Parameters:
+  ///   - channel: `GRPCChannel` to the service host.
+  ///   - defaultCallOptions: Options to use for each service call if the user doesn't provide them.
+  ///   - interceptors: A factory providing interceptors for each RPC.
+  internal init(
+    channel: GRPCChannel,
+    defaultCallOptions: CallOptions = CallOptions(),
+    interceptors: AddressBookServiceClientInterceptorFactoryProtocol? = nil
+  ) {
+    self.channel = channel
+    self.defaultCallOptions = defaultCallOptions
+    self.interceptors = interceptors
+  }
+}
+
+///
 /// Signal Service
 ///
 /// Usage: instantiate `SignalServiceClient`, then call methods of this protocol to make API calls.

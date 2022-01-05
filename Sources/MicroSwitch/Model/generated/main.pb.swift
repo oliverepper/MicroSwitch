@@ -88,8 +88,10 @@ struct InvitationRequest {
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
 
+  /// change to synonym of "inviting person"
   var from: String = String()
 
+  /// change to recipients, should really be plural
   var to: [String] = []
 
   var payload: Data = Data()

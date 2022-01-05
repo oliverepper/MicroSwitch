@@ -123,6 +123,47 @@ internal protocol PushServiceServerInterceptorFactoryProtocol {
   func makeinviteInterceptors() -> [ServerInterceptor<InvitationRequest, InvitationResponse>]
 }
 ///
+/// AddressBook Service
+///
+/// To build a server, implement a class that conforms to this protocol.
+internal protocol AddressBookServiceProvider: CallHandlerProvider {
+  var interceptors: AddressBookServiceServerInterceptorFactoryProtocol? { get }
+
+  func list(request: Google_Protobuf_Empty, context: StreamingResponseCallContext<Handle>) -> EventLoopFuture<GRPCStatus>
+}
+
+extension AddressBookServiceProvider {
+  internal var serviceName: Substring { return "AddressBookService" }
+
+  /// Determines, calls and returns the appropriate request handler, depending on the request's method.
+  /// Returns nil for methods not handled by this service.
+  internal func handle(
+    method name: Substring,
+    context: CallHandlerContext
+  ) -> GRPCServerHandlerProtocol? {
+    switch name {
+    case "list":
+      return ServerStreamingServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<Google_Protobuf_Empty>(),
+        responseSerializer: ProtobufSerializer<Handle>(),
+        interceptors: self.interceptors?.makelistInterceptors() ?? [],
+        userFunction: self.list(request:context:)
+      )
+
+    default:
+      return nil
+    }
+  }
+}
+
+internal protocol AddressBookServiceServerInterceptorFactoryProtocol {
+
+  /// - Returns: Interceptors to use when handling 'list'.
+  ///   Defaults to calling `self.makeInterceptors()`.
+  func makelistInterceptors() -> [ServerInterceptor<Google_Protobuf_Empty, Handle>]
+}
+///
 /// Signal Service
 ///
 /// To build a server, implement a class that conforms to this protocol.
