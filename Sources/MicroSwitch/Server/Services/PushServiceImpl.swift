@@ -61,7 +61,9 @@ final class PushServiceImpl: PushServiceProvider {
             handle.tokens.forEach { token in
                 do {
                     try APNService.sendPush(
-                        notification: .init(aps: .init(), payload: request.payload),
+                        notification: .init(aps: .init(
+                            alert: .init(title: "Invitation", body: "New invite from \(handle.value)")
+                        ), payload: request.payload),
                         to: token)
                         .whenSuccess({
                             send(.ok, message: "Push requested for recipient \(recipient)")
