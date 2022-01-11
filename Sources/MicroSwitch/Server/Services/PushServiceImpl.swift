@@ -64,13 +64,11 @@ final class PushServiceImpl: PushServiceProvider {
                         notification: .init(aps: .init(
                             alert: .init(title: "Invitation", body: "New invite from \(handle.value)")
                         ), payload: request.payload),
-                        to: token)
-                        .whenSuccess({
-                            send(.ok, message: "Push requested for recipient \(recipient)")
-                        })
+                        to: token).cascade(to: nil)
                 } catch {
                     context.statusPromise.fail(GRPCStatus(code: .internalError, message: "\(error)"))
                 }
+                send(.ok, message: "Push to \(handle.value) requested")
             }
         }
 
