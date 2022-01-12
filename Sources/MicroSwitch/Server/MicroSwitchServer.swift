@@ -8,8 +8,8 @@ import Files
 
 final class MicroSwitchServer {
     private static let configFolder = "." + processName + "/etc"
-    private static let certificateFilename = "cert.pem"
-    private static let keyFilename = "cert.key"
+    private static let certificateFilename = "fullchain.pem"
+    private static let keyFilename = "privkey.pem"
 
     private var host: String
     private var port: Int
