@@ -128,10 +128,52 @@ struct APNConfig {
 
   var topic: String = String()
 
+  var environment: APNConfig.Environment = .production
+
   var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  enum Environment: SwiftProtobuf.Enum {
+    typealias RawValue = Int
+    case production // = 0
+    case sandbox // = 1
+    case UNRECOGNIZED(Int)
+
+    init() {
+      self = .production
+    }
+
+    init?(rawValue: Int) {
+      switch rawValue {
+      case 0: self = .production
+      case 1: self = .sandbox
+      default: self = .UNRECOGNIZED(rawValue)
+      }
+    }
+
+    var rawValue: Int {
+      switch self {
+      case .production: return 0
+      case .sandbox: return 1
+      case .UNRECOGNIZED(let i): return i
+      }
+    }
+
+  }
 
   init() {}
 }
+
+#if swift(>=4.2)
+
+extension APNConfig.Environment: CaseIterable {
+  // The compiler won't synthesize support with the UNRECOGNIZED case.
+  static var allCases: [APNConfig.Environment] = [
+    .production,
+    .sandbox,
+  ]
+}
+
+#endif  // swift(>=4.2)
 
 struct Signal {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
@@ -457,6 +499,7 @@ extension APNConfig: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementation
     2: .same(proto: "keyIdentifier"),
     3: .same(proto: "teamIdentifier"),
     4: .same(proto: "topic"),
+    5: .same(proto: "environment"),
   ]
 
   mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -469,6 +512,7 @@ extension APNConfig: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementation
       case 2: try { try decoder.decodeSingularStringField(value: &self.keyIdentifier) }()
       case 3: try { try decoder.decodeSingularStringField(value: &self.teamIdentifier) }()
       case 4: try { try decoder.decodeSingularStringField(value: &self.topic) }()
+      case 5: try { try decoder.decodeSingularEnumField(value: &self.environment) }()
       default: break
       }
     }
@@ -487,6 +531,9 @@ extension APNConfig: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementation
     if !self.topic.isEmpty {
       try visitor.visitSingularStringField(value: self.topic, fieldNumber: 4)
     }
+    if self.environment != .production {
+      try visitor.visitSingularEnumField(value: self.environment, fieldNumber: 5)
+    }
     try unknownFields.traverse(visitor: &visitor)
   }
 
@@ -495,9 +542,17 @@ extension APNConfig: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementation
     if lhs.keyIdentifier != rhs.keyIdentifier {return false}
     if lhs.teamIdentifier != rhs.teamIdentifier {return false}
     if lhs.topic != rhs.topic {return false}
+    if lhs.environment != rhs.environment {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
+}
+
+extension APNConfig.Environment: SwiftProtobuf._ProtoNameProviding {
+  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    0: .same(proto: "PRODUCTION"),
+    1: .same(proto: "SANDBOX"),
+  ]
 }
 
 extension Signal: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {

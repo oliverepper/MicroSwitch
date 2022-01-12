@@ -66,6 +66,7 @@ final class PushServiceImpl: PushServiceProvider {
                         ), payload: request.payload),
                         to: token).cascade(to: nil)
                 } catch {
+                    logger.error("\(error)")
                     context.statusPromise.fail(GRPCStatus(code: .internalError, message: "\(error)"))
                 }
                 send(.ok, message: "Push to \(handle.value) requested")

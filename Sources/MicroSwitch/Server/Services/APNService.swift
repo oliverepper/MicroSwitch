@@ -14,10 +14,10 @@ enum APNService {
 
     enum Error: Swift.Error {
         case key
+        case environment
     }
 
     public static func sendPush(notification: APNService.Notification, to token: String) throws -> EventLoopFuture<Void> {
-
         let config = try APNConfig.load(.default)
 
         guard let key = try? ECDSAKey.private(pem: Data(config.key.utf8)) else {
@@ -30,7 +30,7 @@ enum APNService {
                 keyIdentifier: .init(string: config.keyIdentifier),
                 teamIdentifier: config.teamIdentifier),
             topic: config.topic,
-            environment: .sandbox, // TODO: make that configurable
+            environment: config.environment == APNConfig.Environment.production ? .production : .sandbox,
             logger: logger,
             timeout: nil)
 

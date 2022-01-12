@@ -53,6 +53,11 @@ message APNConfig {
     string keyIdentifier = 2;
     string teamIdentifier = 3;
     string topic = 4;
+    enum Environment {
+        PRODUCTION = 0;
+        SANDBOX = 1;
+    };
+    Environment environment = 5;
 }
 
 
