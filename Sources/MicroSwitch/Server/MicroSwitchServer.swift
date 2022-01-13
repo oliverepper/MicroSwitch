@@ -32,7 +32,7 @@ final class MicroSwitchServer {
 
         return GRPC.Server.usingTLS(
             with: .makeServerConfigurationBackedByNIOSSL(
-                certificateChain: [.certificate(try .init(file: cert.url.path, format: .pem))],
+                certificateChain: try NIOSSLCertificate.fromPEMFile(cert.url.path).map { .certificate($0) },
                 privateKey: .privateKey(try .init(file: key.url.path, format: .pem))),
             on: group)
     }
