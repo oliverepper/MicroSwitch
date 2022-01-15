@@ -10,7 +10,7 @@ final class LoggingInterceptor<T, U>: ServerInterceptor<T, U> where T: Message {
             }
             if case let .message(request) = part,
                let jsonString = try? request.jsonString() {
-                logger.debug("\(type(of: part)): \(jsonString)")
+                logger.debug("\(type(of: part)): \(jsonString.prefix(10))")
             }
         }
         context.receive(part)
