@@ -107,12 +107,15 @@ final class SignalServiceImpl: SignalServiceProvider {
 
     private func connection(_ connectMessage: Connect, in context: StreamingResponseCallContext<Signal>) {
         func associate(_ context: StreamingResponseCallContext<Signal>, with session: Session) {
+            // add the client to the session
             session.add(context)
 
+            // save the clients address in the sessionIDs lookup table
             if let address = context.userInfo[SocketAddressKey.self] {
                 sessionIDs[address.hashValue] = session.id
             }
 
+            // tell all peers that a new client has connected
             session.peers(for: context).forEach { peerContext in
                 peerContext.sendResponse(.with {
                     $0.connect = .with {
@@ -124,27 +127,32 @@ final class SignalServiceImpl: SignalServiceProvider {
             }
         }
 
-        if connectMessage.sessionID.isEmpty {
-            // create new session
-            let session = Session()
-            sessions[session.id] = session
-            associate(context, with: session)
-            // answer with sessionID
+        func answer(_ context: StreamingResponseCallContext<Signal>, with session: Session) {
             context.sendResponse(.with {
                 $0.connect = .with {
                     $0.from = context.userInfo[SocketAddressKey.self]?.description ?? "Unknown"
                     $0.sessionID = session.id.uuidString
                 }
             }).cascade(to: nil)
+        }
+
+        if connectMessage.sessionID.isEmpty {
+            // create new session
+            let session = Session()
+            sessions[session.id] = session
+
+            associate(context, with: session)
+            answer(context, with: session)
         } else {
             // connect to session
             guard let session = session(for: connectMessage.sessionID) else {
                 error(.session, in: context)
                 return
             }
-            associate(context, with: session)
-        }
 
+            associate(context, with: session)
+            answer(context, with: session)
+        }
     }
 
     private func broadcast(_ broadcastMessage: Broadcast, in context: StreamingResponseCallContext<Signal>) {
