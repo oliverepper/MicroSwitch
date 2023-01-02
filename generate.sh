@@ -5,10 +5,10 @@ set -ex
 if [ -d swift-protobuf ]
 then
 	pushd swift-protobuf
-	git reset --hard main
+	git reset --hard 1.20.3
 	popd
 else	
-	git -c advice.detachedHead=false clone --depth 1 --branch main https://github.com/apple/swift-protobuf.git
+	git -c advice.detachedHead=false clone --depth 1 --branch 1.20.3 https://github.com/apple/swift-protobuf.git
 fi
 
 pushd swift-protobuf
@@ -18,10 +18,10 @@ popd
 if [ -d grpc-swift ]
 then
 	pushd grpc-swift
-	git reset --hard main
+	git reset --hard 1.13.1
 	popd
 else	
-	git -c advice.detachedHead=false clone --depth 1 --branch main https://github.com/grpc/grpc-swift.git
+	git -c advice.detachedHead=false clone --depth 1 --branch 1.13.1 https://github.com/grpc/grpc-swift.git
 fi
 
 pushd grpc-swift
