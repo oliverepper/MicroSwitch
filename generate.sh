@@ -18,10 +18,10 @@ popd
 if [ -d grpc-swift ]
 then
 	pushd grpc-swift
-	git reset --hard 1.13.1
+	git reset --hard 1.5.0
 	popd
 else	
-	git -c advice.detachedHead=false clone --depth 1 --branch 1.13.1 https://github.com/grpc/grpc-swift.git
+	git -c advice.detachedHead=false clone --depth 1 --branch 1.5.0 https://github.com/grpc/grpc-swift.git
 fi
 
 pushd grpc-swift
