@@ -12,3 +12,5 @@ APNConfig_default.json
 TODO.md
 .mswitch
 bin
+grpc-swift
+swift-protobuf
