@@ -14,9 +14,9 @@ let package = Package(
     dependencies: [
         .package(url: "https://github.com/apple/swift-argument-parser", from: "1.0.1"),
         .package(url: "https://github.com/apple/swift-log", from: "1.4.2"),
-        .package(url: "https://github.com/grpc/grpc-swift", from: "1.5.0"),
+        .package(url: "https://github.com/oliverepper/grpc-swift.git", .branch("main")),
         .package(url: "https://github.com/JohnSundell/Files", from: "4.2.0"),
-        .package(url: "https://github.com/kylebrowning/APNSwift", from: "3.2.0")
+        .package(url: "https://github.com/kylebrowning/APNSwift", from: "4.0.0")
     ],
     targets: [
         .executableTarget(

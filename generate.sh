@@ -34,5 +34,7 @@ mkdir -p Sources/MicroSwitch/Model/generated &&
 
 
 mkdir -p Sources/MicroClient/Model/generated &&
-    protoc main.proto --swift_out=./Sources/MicroClient/Model/generated --grpc-swift_opt=Client=true,Server=false --grpc-swift_out=./Sources/MicroClient/Model/generated --plugin=./swift-protobuf/.build/release/protoc-gen-swift --plugin=./grpc-swift/.build/release/protoc-gen-grpc-swift &&
+    protoc main.proto --swift_out=./Sources/MicroClient/Model/generated --grpc-swift_opt=Client=true,Server=false --grpc-swift_out=./Sources/MicroClient/Model/generated &&
+
+#    protoc main.proto --swift_out=./Sources/MicroClient/Model/generated --grpc-swift_opt=Client=true,Server=false --grpc-swift_out=./Sources/MicroClient/Model/generated --plugin=./swift-protobuf/.build/release/protoc-gen-swift --plugin=./grpc-swift/.build/release/protoc-gen-grpc-swift &&
     echo "MicroClient done"
