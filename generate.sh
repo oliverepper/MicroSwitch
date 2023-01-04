@@ -18,10 +18,10 @@ popd
 if [ -d grpc-swift ]
 then
 	pushd grpc-swift
-	git reset --hard 1.5.0
+	git reset --hard
 	popd
 else	
-	git -c advice.detachedHead=false clone --depth 1 --branch 1.5.0 https://github.com/grpc/grpc-swift.git
+	git -c advice.detachedHead=false clone --depth 1 https://github.com/grpc/grpc-swift.git
 fi
 
 pushd grpc-swift
@@ -34,7 +34,6 @@ mkdir -p Sources/MicroSwitch/Model/generated &&
 
 
 mkdir -p Sources/MicroClient/Model/generated &&
-    protoc main.proto --swift_out=./Sources/MicroClient/Model/generated --grpc-swift_opt=Client=true,Server=false --grpc-swift_out=./Sources/MicroClient/Model/generated &&
-
-#    protoc main.proto --swift_out=./Sources/MicroClient/Model/generated --grpc-swift_opt=Client=true,Server=false --grpc-swift_out=./Sources/MicroClient/Model/generated --plugin=./swift-protobuf/.build/release/protoc-gen-swift --plugin=./grpc-swift/.build/release/protoc-gen-grpc-swift &&
+    protoc main.proto --swift_out=./Sources/MicroClient/Model/generated --grpc-swift_opt=Client=true,Server=false --grpc-swift_out=./Sources/MicroClient/Model/generated --plugin=./swift-protobuf/.build/release/protoc-gen-swift --plugin=./grpc-swift/.build/release/protoc-gen-grpc-swift &&
     echo "MicroClient done"
+
